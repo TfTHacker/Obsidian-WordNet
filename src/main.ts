@@ -1,38 +1,38 @@
-import { App, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { App, Modal, Notice, Plugin, PluginSettingTab, Setting, ToggleComponent } from 'obsidian';
 
-interface MyPluginSettings {
-	mySetting: string;
+interface WordNetSettings {
+	enableRibbon: boolean;
 }
 
-const DEFAULT_SETTINGS: MyPluginSettings = {
-	mySetting: 'default'
+const DEFAULT_SETTINGS: WordNetSettings = {
+	enableRibbon: true
 }
 
-export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
+export default class WordNetPlugin extends Plugin {
+	settings: WordNetSettings;
+	ribbonIcon: HTMLElement;
+	configureRibbonCommand() {
+		this.ribbonIcon = this.addRibbonIcon('dice', 'WordNet Dictionary', () => {
+			new Notice('TODO: link to dictionary');
+		});	
+	}
 
 	async onload() {
-		console.log('loading plugin');
+		console.log('loading WordNet plugin');
 
 		await this.loadSettings();
 
-		this.addRibbonIcon('dice', 'Sample Plugin', () => {
-			new Notice('This is a notice!');
-		});
-
-		this.addStatusBarItem().setText('Status Bar Text');
+		if(this.settings.enableRibbon) 
+			this.configureRibbonCommand();
 
 		this.addCommand({
-			id: 'open-sample-modal',
-			name: 'Open Sample Modal',
-			// callback: () => {
-			// 	console.log('Simple Callback');
-			// },
+			id: 'open-wordnet-suggestor',
+			name: 'Look up a word',
 			checkCallback: (checking: boolean) => {
 				let leaf = this.app.workspace.activeLeaf;
 				if (leaf) {
 					if (!checking) {
-						new SampleModal(this.app).open();
+						// logic here
 					}
 					return true;
 				}
@@ -40,7 +40,7 @@ export default class MyPlugin extends Plugin {
 			}
 		});
 
-		this.addSettingTab(new SampleSettingTab(this.app, this));
+		this.addSettingTab(new WordNetSettingTab(this.app, this));
 
 		this.registerCodeMirror((cm: CodeMirror.Editor) => {
 			console.log('codemirror', cm);
@@ -54,7 +54,7 @@ export default class MyPlugin extends Plugin {
 	}
 
 	onunload() {
-		console.log('unloading plugin');
+		console.log('unloading WordNet plugin');
 	}
 
 	async loadSettings() {
@@ -66,47 +66,32 @@ export default class MyPlugin extends Plugin {
 	}
 }
 
-class SampleModal extends Modal {
-	constructor(app: App) {
-		super(app);
-	}
+class WordNetSettingTab extends PluginSettingTab {
+	plugin: WordNetPlugin;
 
-	onOpen() {
-		let {contentEl} = this;
-		contentEl.setText('Woah!');
-	}
-
-	onClose() {
-		let {contentEl} = this;
-		contentEl.empty();
-	}
-}
-
-class SampleSettingTab extends PluginSettingTab {
-	plugin: MyPlugin;
-
-	constructor(app: App, plugin: MyPlugin) {
+	constructor(app: App, plugin: WordNetPlugin) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}
 
 	display(): void {
 		let {containerEl} = this;
-
 		containerEl.empty();
-
-		containerEl.createEl('h2', {text: 'Settings for my awesome plugin.'});
-
+		containerEl.createEl('h2', {text: 'WordNet Dictionary Setting'});
 		new Setting(containerEl)
-			.setName('Setting #1')
-			.setDesc('It\'s a secret')
-			.addText(text => text
-				.setPlaceholder('Enter your secret')
-				.setValue('')
-				.onChange(async (value) => {
-					console.log('Secret: ' + value);
-					this.plugin.settings.mySetting = value;
-					await this.plugin.saveSettings();
-				}));
+			.setName('Enable Ribbon Support')
+			.setDesc('Toggle on and off the WordNet dictionary button in the ribbon.')
+			.addToggle((cb: ToggleComponent) => {
+				cb.setValue(this.plugin.settings.enableRibbon);
+				cb.onChange(async (value: boolean) => {
+				  this.plugin.settings.enableRibbon = value;
+				  if(this.plugin.settings.enableRibbon==false)
+				  	this.plugin.ribbonIcon.remove();
+				  else
+				  	this.plugin.configureRibbonCommand();
+
+				  await this.plugin.saveSettings();
+				});
+			  });
 	}
 }
