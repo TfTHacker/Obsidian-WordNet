@@ -2,4 +2,4 @@
 WordNet plugin for Obsidian.  WordNet is a large lexical database of English developed by Princeton University and its license allows use in other applications.
 
 # Licensing
-Princeton University "About WordNet." [WordNet](https://wordnet.princeton.edu/). Princeton University. 2010. 
+Dictionary provided by the [WordNet](https://wordnet.princeton.edu/) project of Princeton University. [WordNet license](https://raw.githubusercontent.com/TfTHacker/Obsidian-WordNet/main/LICENSE-WordNet)
