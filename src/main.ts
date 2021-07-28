@@ -1,4 +1,5 @@
 import { App, Modal, Notice, Plugin, PluginSettingTab, Setting, ToggleComponent } from 'obsidian';
+import DictionarySuggester  from './suggester'
 
 interface WordNetSettings {
 	enableRibbon: boolean;
@@ -10,10 +11,14 @@ const DEFAULT_SETTINGS: WordNetSettings = {
 
 export default class WordNetPlugin extends Plugin {
 	settings: WordNetSettings;
+	dictionarySuggestor: DictionarySuggester;
 	ribbonIcon: HTMLElement;
 	configureRibbonCommand() {
-		this.ribbonIcon = this.addRibbonIcon('dice', 'WordNet Dictionary', () => {
+		this.ribbonIcon = this.addRibbonIcon('dice', 'WordNet Dictionary', async () => {
 			new Notice('TODO: link to dictionary');
+			// this.dictionarySuggestor.getSuggestions('');
+			this.dictionarySuggestor.open();
+
 		});	
 	}
 
@@ -21,6 +26,8 @@ export default class WordNetPlugin extends Plugin {
 		console.log('loading WordNet plugin');
 
 		await this.loadSettings();
+
+		this.dictionarySuggestor = new DictionarySuggester(this);
 
 		if(this.settings.enableRibbon) 
 			this.configureRibbonCommand();
@@ -40,17 +47,19 @@ export default class WordNetPlugin extends Plugin {
 			}
 		});
 
-		this.addSettingTab(new WordNetSettingTab(this.app, this));
 
-		this.registerCodeMirror((cm: CodeMirror.Editor) => {
-			console.log('codemirror', cm);
-		});
+		// this.addSettingTab(new WordNetSettingTab(this.app, this));
 
-		this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
-			console.log('click', evt);
-		});
+		// this.registerCodeMirror((cm: CodeMirror.Editor) => {
+		// 	console.log('codemirror', cm);
+		// });
 
-		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
+		// this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
+		// 	console.log('click', evt);
+		// });
+
+		// this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
+
 	}
 
 	onunload() {

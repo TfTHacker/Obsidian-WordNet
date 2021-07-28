@@ -18,7 +18,7 @@ export default {
   plugins: [
     copyAndWatch('src/styles.css', 'styles.css'),
     copyAndWatch('src/manifest.json', 'manifest.json'),
-    copyAndWatch('src/wordnet.sqlite', 'wordnet.sqlite'),
+    copyAndWatch('src/dict-Wordnet.json', 'dict-WordNet.json'),
     typescript(),
     nodeResolve({browser: true}),
     commonjs(),
