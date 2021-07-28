@@ -1,6 +1,5 @@
-import { App, Plugin_2,FuzzyMatch,  FuzzySuggestModal, ToggleComponent } from 'obsidian';
+import { FuzzyMatch,  FuzzySuggestModal, MarkdownView, Notice } from 'obsidian';
 import WordNetPlugin  from './main';
-import DatabaseLayer from './database';
 
 interface Definition   {
     SearchTerm: string,
@@ -10,7 +9,6 @@ interface Definition   {
 
 export default class DictionarySuggester extends FuzzySuggestModal<Definition>{
 	plugin: WordNetPlugin;
-    db: DatabaseLayer;
     wordNet: Definition[];
     customDict: Definition[];
 
@@ -28,16 +26,23 @@ export default class DictionarySuggester extends FuzzySuggestModal<Definition>{
                 this.customDict = await JSON.parse(fileCustomDict);    
             } else
                 this.customDict = null;
-
-            // this.query('hi')
         }, 10);        
     }
 
     query(term:  string): any  {
-        console.log('term: ' + term);
         let results = [];
         const searchTerm = term.toLocaleLowerCase();
         let countOfFoundMatches = 0;
+        if(this.customDict!=null) {
+            for(let i = 0; ( i < this.customDict.length && countOfFoundMatches < 30); i++) {
+                let item = this.customDict[i];
+                if(item['SearchTerm'].startsWith(searchTerm)) {
+                    results.push(this.customDict[i]);
+                    countOfFoundMatches++;
+                }
+            }    
+        }
+        countOfFoundMatches = 0;
         for(let i = 0; ( i < this.wordNet.length && countOfFoundMatches < 20); i++) {
             let item = this.wordNet[i];
             if(item['SearchTerm'].startsWith(searchTerm)) {
@@ -45,41 +50,32 @@ export default class DictionarySuggester extends FuzzySuggestModal<Definition>{
                 countOfFoundMatches++;
             }
         }
-        countOfFoundMatches = 0;
-        for(let i = 0; ( i < this.customDict.length && countOfFoundMatches < 20); i++) {
-            let item = this.customDict[i];
-            if(item['SearchTerm'].startsWith(searchTerm)) {
-                results.push(this.customDict[i]);
-                countOfFoundMatches++;
-            }
-        }
-        console.log(JSON.stringify(results,null,2));
         return results;
     }
 
     getItems(): Definition[] { 
-        let results = [];
-        if(this.inputEl.value.trim().length==0) 
-            for(let i=1; i<10; i++)
-                results.push(this.wordNet[i]);
-        else 
-            results=this.query(this.inputEl.value);
-        return results; 
+        return this.inputEl.value.trim().length==0 ? [] : this.query(this.inputEl.value) 
     };
 
-    getItemText(item: Definition) { return item.Term; }
-
-    onChooseItem(item: Definition, evt: MouseEvent | KeyboardEvent) {
-        console.log('onChooseItem')
+    getItemText(item: Definition) { 
+        return item.SearchTerm; 
     }
 
-    renderSuggestion(item: FuzzyMatch<Definition>, el: HTMLElement) {
-        // console.log('render ' + JSON.stringify(item.item))
-        el.innerText = item.item.Term }
+    onChooseItem(item: Definition, evt: MouseEvent | KeyboardEvent) {}
 
+    renderSuggestion(item: FuzzyMatch<Definition>, el: HTMLElement) {
+        el.innerHTML = '<b>' + item.item.Term + '</b><br/>' + item.item.Definition;
+    }
 
     onChooseSuggestion(item: FuzzyMatch<Definition>, evt: MouseEvent | KeyboardEvent): void {
-console.log('onChooseSuggestion')
+        const active_view = this.app.workspace.getActiveViewOfType(MarkdownView);
+        if (active_view === null) 
+            new Notice( item.item.Term + ' \n' + item.item.Definition, 10000 );
+        else {
+            const editor = active_view.editor;
+            const doc = editor.getDoc();
+            doc.replaceSelection( '**' + item.item.Term + '**\n' + item.item.Definition + '\n\n' );
+        }
     }
 
 }

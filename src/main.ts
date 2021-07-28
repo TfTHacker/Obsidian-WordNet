@@ -11,14 +11,12 @@ const DEFAULT_SETTINGS: WordNetSettings = {
 
 export default class WordNetPlugin extends Plugin {
 	settings: WordNetSettings;
-	dictionarySuggestor: DictionarySuggester;
 	ribbonIcon: HTMLElement;
+	dictionarySuggestor: DictionarySuggester;
+
 	configureRibbonCommand() {
 		this.ribbonIcon = this.addRibbonIcon('dice', 'WordNet Dictionary', async () => {
-			new Notice('TODO: link to dictionary');
-			// this.dictionarySuggestor.getSuggestions('');
 			this.dictionarySuggestor.open();
-
 		});	
 	}
 
@@ -39,27 +37,13 @@ export default class WordNetPlugin extends Plugin {
 				let leaf = this.app.workspace.activeLeaf;
 				if (leaf) {
 					if (!checking) {
-						// logic here
+						this.dictionarySuggestor.open();
 					}
 					return true;
 				}
 				return false;
 			}
 		});
-
-
-		// this.addSettingTab(new WordNetSettingTab(this.app, this));
-
-		// this.registerCodeMirror((cm: CodeMirror.Editor) => {
-		// 	console.log('codemirror', cm);
-		// });
-
-		// this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
-		// 	console.log('click', evt);
-		// });
-
-		// this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
-
 	}
 
 	onunload() {
