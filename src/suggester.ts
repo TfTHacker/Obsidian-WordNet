@@ -16,6 +16,8 @@ export default class DictionarySuggester extends FuzzySuggestModal<Definition>{
         super(plugin.app);
         this.plugin = plugin;
 
+        this.setPlaceholder('type word to lookup in WordNet');
+
         setTimeout( async () => {
             //load the WordNet dictionary
             const fileWordNet = await this.plugin.app.vault.adapter.read(this.plugin.manifest.dir + '/dict-WordNet.json' );
