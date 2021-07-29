@@ -70,14 +70,14 @@ export default class DictionarySuggester extends FuzzySuggestModal<Definition>{
     }
 
     onChooseSuggestion(item: FuzzyMatch<Definition>, evt: MouseEvent | KeyboardEvent): void {
-        const active_view = this.app.workspace.getActiveViewOfType(MarkdownView);
-        if (active_view === null) 
-            new Notice( item.item.Term + ' \n' + item.item.Definition, 10000 );
-        else {
+        if ( this.app.workspace.activeLeaf.getViewState().state.mode=='source') {
+            const active_view = this.app.workspace.getActiveViewOfType(MarkdownView);
             const editor = active_view.editor;
             const doc = editor.getDoc();
-            doc.replaceSelection( '**' + item.item.Term + '**\n' + item.item.Definition + '\n\n' );
-        }
+            doc.replaceSelection( '**' + item.item.Term + '**\n' + item.item.Definition + '\n\n' );        
+        } else 
+            new Notice( item.item.Term + ' \n' + item.item.Definition, 10000 );
+        
     }
 
 }

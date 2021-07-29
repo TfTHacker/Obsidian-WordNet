@@ -22,7 +22,6 @@ export default class WordNetPlugin extends Plugin {
 	ribbonIcon: HTMLElement;
 	dictionarySuggestor: DictionarySuggester;
 	
-
 	configureRibbonCommand() {
 		this.ribbonIcon = this.addRibbonIcon('wordnet', 'WordNet Dictionary', async () => {
 			this.dictionarySuggestor.open();
@@ -43,14 +42,9 @@ export default class WordNetPlugin extends Plugin {
 			id: 'open-wordnet-suggestor',
 			name: 'Look up a word',
 			checkCallback: (checking: boolean) => {
-				let leaf = this.app.workspace.activeLeaf;
-				if (leaf) {
-					if (!checking) {
-						this.dictionarySuggestor.open();
-					}
-					return true;
-				}
-				return false;
+				if (!checking) 
+					this.dictionarySuggestor.open();
+				return true;
 			}
 		});
 	}
