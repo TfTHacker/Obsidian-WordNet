@@ -56,7 +56,20 @@ export default class DictionarySuggester extends FuzzySuggestModal<Definition>{
     }
 
     getItems(): Definition[] { 
-        return this.inputEl.value.trim().length==0 ? [] : this.query(this.inputEl.value) 
+        let searchTerm = '';
+
+        if( this.inputEl.value.trim().length==0 ) {
+            const currentView: any = this.plugin.app.workspace.activeLeaf.view;        
+            if( currentView.editor.somethingSelected() )  {
+                searchTerm = currentView.editor.getSelection();
+                this.inputEl.value=searchTerm;
+                this.inputEl.setSelectionRange(0,searchTerm.length);
+            }
+        } else
+            searchTerm = this.inputEl.value.trim()
+
+        return searchTerm=='' ? [] : this.query(searchTerm) 
+        // return this.inputEl.value.trim().length==0 ? [] : this.query(this.inputEl.value) 
     };
 
     getItemText(item: Definition) { 
