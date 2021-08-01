@@ -69,7 +69,6 @@ export default class DictionarySuggester extends FuzzySuggestModal<Definition>{
             searchTerm = this.inputEl.value.trim()
 
         return searchTerm=='' ? [] : this.query(searchTerm) 
-        // return this.inputEl.value.trim().length==0 ? [] : this.query(this.inputEl.value) 
     };
 
     getItemText(item: Definition) { 
