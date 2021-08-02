@@ -78,7 +78,8 @@ export default class DictionarySuggester extends FuzzySuggestModal<Definition>{
 
         if( this.inputEl.value.trim().length==0 ) {
             const currentView: any = this.plugin.app.workspace.activeLeaf.view;        
-            if( currentView.editor.somethingSelected() )  {
+            if( this.plugin.app.workspace.activeLeaf.view.getState().mode != undefined 
+                    && currentView.editor.somethingSelected() )  {
                 searchTerm = currentView.editor.getSelection();
                 this.inputEl.value=searchTerm;
                 this.inputEl.setSelectionRange(0,searchTerm.length);
