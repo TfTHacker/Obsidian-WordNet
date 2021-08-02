@@ -17,7 +17,6 @@ export default {
   external: ['obsidian'],
   plugins: [
     copyAndWatch('src/manifest.json', 'manifest.json'),
-    copyAndWatch('src/dict-Wordnet.json', 'dict-WordNet.json'),
     typescript(),
     nodeResolve({browser: true}),
     commonjs(),

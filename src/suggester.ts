@@ -1,4 +1,4 @@
-import { FuzzyMatch,  FuzzySuggestModal, MarkdownView, Notice } from 'obsidian';
+import { FuzzyMatch,  FuzzySuggestModal, MarkdownView, Notice, request } from 'obsidian';
 import WordNetPlugin  from './main';
 
 interface Definition   {
@@ -20,8 +20,25 @@ export default class DictionarySuggester extends FuzzySuggestModal<Definition>{
 
         setTimeout( async () => {
             //load the WordNet dictionary
-            const fileWordNet = await this.plugin.app.vault.adapter.read(this.plugin.manifest.dir + '/dict-WordNet.json' );
-            this.wordNet = await JSON.parse(fileWordNet);
+            const pathWordNetJson = this.plugin.manifest.dir + '/dict-WordNet.json';
+
+            if(await this.plugin.app.vault.adapter.exists(pathWordNetJson)) {
+                const fileWordNet = await this.plugin.app.vault.adapter.read( pathWordNetJson );
+                this.wordNet = await JSON.parse(fileWordNet);   
+            } else {
+                new Notice("WordNet dictionary is being installed, it will be available shortly.", 10000);
+                fetch('https://wordnet.glitch.me/dict-WordNet.json')
+                    .then(response => response.json())
+                    .then( async (data) => {
+                        this.wordNet = data;   
+                        await this.plugin.app.vault.adapter.write(pathWordNetJson, JSON.stringify(data));
+                        new Notice("WordNet dictionary is installed.", 10000);            
+                    })
+                    .catch((e) => {
+                        new Notice(e)
+                    });
+            }
+
             // users can define their own custom dictionary and place it in the plugins directory. 
             if( await this.plugin.app.vault.adapter.exists(this.plugin.manifest.dir + '/dict-MyDict.json')) {
                 const fileCustomDict = await this.plugin.app.vault.adapter.read(this.plugin.manifest.dir + '/dict-MyDict.json' );
@@ -30,6 +47,7 @@ export default class DictionarySuggester extends FuzzySuggestModal<Definition>{
                 this.customDict = null;
         }, 10);        
     }
+
 
     query(term:  string): any  {
         let results = [];
