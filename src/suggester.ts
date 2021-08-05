@@ -28,7 +28,7 @@ export default class DictionarySuggester extends FuzzySuggestModal<Definition>{
                 const fileWordNet = await this.adapter.read(pathWordNetJson);
                 this.wordNet = await JSON.parse(fileWordNet);
             } else {
-                const downloadMessage = new Notice("WordNet dictionary is being configured, it will be available shortly.", 0);
+                const downloadMessage = new Notice("WordNet dictionary is being downloaded, this may take a few minutes. This message will disappear when the process is complete.", 0);
                 const response = await fetch('https://wordnet.glitch.me/dict-WordNet.json');
                 downloadMessage.hide();
                 if (!response.ok) {
