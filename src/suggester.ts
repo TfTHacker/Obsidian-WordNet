@@ -28,14 +28,25 @@ export default class DictionarySuggester extends FuzzySuggestModal<Definition>{
                 const fileWordNet = await this.adapter.read(pathWordNetJson);
                 this.wordNet = await JSON.parse(fileWordNet);
             } else {
-                const downloadMessage = new Notice("WordNet dictionary is being downloaded, this may take a few minutes. This message will disappear when the process is complete.", 0);
-                const response = await fetch('https://wordnet.glitch.me/dict-WordNet.json');
-                downloadMessage.hide();
-                if (!response.ok) {
-                    new Notice(`An error has occured with the download, please try again later: ${response.status}`);
+                if(navigator.onLine==false) {
+                    new Notice('You do not have an internet connection, and the WordNet dictionary cannot be downloaded. Please restore your interent connection and resteart Obsidian', 30000);
+                    this.plugin.unload();
                 } else {
-                    this.wordNet = await response.json();
-                    await this.adapter.write(pathWordNetJson, JSON.stringify(this.wordNet));
+                    const downloadMessage = new Notice("WordNet dictionary is being downloaded, this may take a few minutes. This message will disappear when the process is complete.", 0);
+                    const response = await fetch('https://wordnet.glitch.me/dict-WordNet.json');
+                    downloadMessage.hide();
+                    if (!response.ok) {
+                        if(response.status == 404) {
+                            new Notice(`The WordNet dictionary file is not currently available for download. Please try again later or contact the developer on Twitter: @TfThacker for support.`,30000);
+                        } else {
+                            console.log(`Error in WordNet dictinary: ${response.status}`);
+                            new Notice(`An error has occured with the download, please try again later: ${response.status}`);    
+                        }
+                        this.plugin.unload();
+                    } else {
+                        this.wordNet = await response.json();
+                        await this.adapter.write(pathWordNetJson, JSON.stringify(this.wordNet));
+                    }
                 }
             }
 
