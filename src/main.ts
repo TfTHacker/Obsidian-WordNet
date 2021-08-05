@@ -1,5 +1,5 @@
 import { App, Modal, Notice, Plugin, PluginSettingTab, Setting, ToggleComponent, addIcon } from 'obsidian';
-import DictionarySuggester  from './suggester'
+import DictionarySuggester from './suggester'
 
 interface WordNetSettings {
 	enableRibbon: boolean;
@@ -21,11 +21,11 @@ export default class WordNetPlugin extends Plugin {
 	settings: WordNetSettings;
 	ribbonIcon: HTMLElement;
 	dictionarySuggestor: DictionarySuggester;
-	
+
 	configureRibbonCommand() {
 		this.ribbonIcon = this.addRibbonIcon('wordnet', 'WordNet Dictionary', async () => {
 			this.dictionarySuggestor.open();
-		});	
+		});
 	}
 
 	async onload() {
@@ -35,17 +35,13 @@ export default class WordNetPlugin extends Plugin {
 
 		this.dictionarySuggestor = new DictionarySuggester(this);
 
-		if(this.settings.enableRibbon) 
+		if (this.settings.enableRibbon)
 			this.configureRibbonCommand();
 
 		this.addCommand({
 			id: 'open-wordnet-suggestor',
 			name: 'Look up a word',
-			checkCallback: (checking: boolean) => {
-				if (!checking) 
-					this.dictionarySuggestor.open();
-				return true;
-			}
+			callback: ()=> { this.dictionarySuggestor.open() }
 		});
 	}
 
@@ -71,23 +67,23 @@ class WordNetSettingTab extends PluginSettingTab {
 	}
 
 	display(): void {
-		let {containerEl} = this;
+		let { containerEl } = this;
 		containerEl.empty();
-		containerEl.createEl('h2', {text: 'WordNet Dictionary Setting'});
+		containerEl.createEl('h2', { text: 'WordNet Dictionary Setting' });
 		new Setting(containerEl)
 			.setName('Enable Ribbon Support')
 			.setDesc('Toggle on and off the WordNet dictionary button in the ribbon.')
 			.addToggle((cb: ToggleComponent) => {
 				cb.setValue(this.plugin.settings.enableRibbon);
 				cb.onChange(async (value: boolean) => {
-				  this.plugin.settings.enableRibbon = value;
-				  if(this.plugin.settings.enableRibbon==false)
-				  	this.plugin.ribbonIcon.remove();
-				  else
-				  	this.plugin.configureRibbonCommand();
+					this.plugin.settings.enableRibbon = value;
+					if (this.plugin.settings.enableRibbon == false)
+						this.plugin.ribbonIcon.remove();
+					else
+						this.plugin.configureRibbonCommand();
 
-				  await this.plugin.saveSettings();
+					await this.plugin.saveSettings();
 				});
-			  });
+			});
 	}
 }
