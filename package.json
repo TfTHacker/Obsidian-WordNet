@@ -26,6 +26,7 @@
   "dependencies": {
     "detect-indent": "^6.1.0",
     "detect-newline": "^3.1.0",
+    "esbuild": "^0.12.18",
     "stringify-package": "^1.0.1"
   }
 }

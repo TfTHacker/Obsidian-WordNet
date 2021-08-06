@@ -16,16 +16,16 @@ export default class DictionarySuggester extends FuzzySuggestModal<Definition>{
     constructor(plugin: WordNetPlugin) {
         super(plugin.app);
         this.plugin = plugin;
-        this.adapter = this.plugin.app.vault.adapter;
 
         this.setPlaceholder('type word to lookup in WordNet');
 
         setTimeout(async () => {
             //load the WordNet dictionary
             const pathWordNetJson = this.plugin.manifest.dir + '/dict-WordNet.json';
+            const adapter = this.plugin.app.vault.adapter
 
-            if (await this.adapter.exists(pathWordNetJson)) {
-                const fileWordNet = await this.adapter.read(pathWordNetJson);
+            if (await adapter.exists(pathWordNetJson)) {
+                const fileWordNet = await adapter.read(pathWordNetJson);
                 this.wordNet = await JSON.parse(fileWordNet);
             } else {
                 if(navigator.onLine==false) {
@@ -33,26 +33,32 @@ export default class DictionarySuggester extends FuzzySuggestModal<Definition>{
                     this.plugin.unload();
                 } else {
                     const downloadMessage = new Notice("WordNet dictionary is being downloaded, this may take a few minutes. This message will disappear when the process is complete.", 0);
-                    const response = await fetch('https://wordnet.glitch.me/dict-WordNet.json');
-                    downloadMessage.hide();
-                    if (!response.ok) {
-                        if(response.status == 404) {
-                            new Notice(`The WordNet dictionary file is not currently available for download. Please try again later or contact the developer on Twitter: @TfThacker for support.`,30000);
+                    try {
+                        const response = await fetch('https://wordnet.glitch.me/dict-WordNet.json');
+                        downloadMessage.hide();
+                        if (!response.ok) {
+                            if(response.status == 404) {
+                                new Notice(`The WordNet dictionary file is not currently available for download. Please try again later or contact the developer on Twitter: @TfThacker for support.`,30000);
+                            } else {
+                                console.log(`Error in WordNet dictinary: ${response.status}`);
+                                new Notice(`An error has occured with the download, please try again later: ${response.status}`);    
+                            }
+                            this.plugin.unload();
                         } else {
-                            console.log(`Error in WordNet dictinary: ${response.status}`);
-                            new Notice(`An error has occured with the download, please try again later: ${response.status}`);    
-                        }
-                        this.plugin.unload();
-                    } else {
-                        this.wordNet = await response.json();
-                        await this.adapter.write(pathWordNetJson, JSON.stringify(this.wordNet));
+                            this.wordNet = await response.json();
+                            await adapter.write(pathWordNetJson, JSON.stringify(this.wordNet));
+                        }                        
+                    } catch (e) {
+                        console.log(`Error in WordNet dictinary: ${e}`);
+                        new Notice(`An error has occured with the download, please try again later: ${e}`);    
+                        this.plugin.unload();            
                     }
                 }
             }
 
             // users can define their own custom dictionary and place it in the plugins directory. 
-            if (await this.adapter.exists(this.plugin.manifest.dir + '/dict-MyDict.json')) {
-                const fileCustomDict = await this.adapter.read(this.plugin.manifest.dir + '/dict-MyDict.json');
+            if (await adapter.exists(this.plugin.manifest.dir + '/dict-MyDict.json')) {
+                const fileCustomDict = await adapter.read(this.plugin.manifest.dir + '/dict-MyDict.json');
                 this.customDict = await JSON.parse(fileCustomDict);
             } else
                 this.customDict = null;
@@ -88,7 +94,7 @@ export default class DictionarySuggester extends FuzzySuggestModal<Definition>{
 
         if (this.inputEl.value.trim().length == 0) {
             const currentView: any = this.plugin.app.workspace.getActiveViewOfType(MarkdownView);
-            if (currentView != null && currentView.getState().mode != undefined
+            if (currentView != null && currentView.getMode() != undefined
                 && currentView.editor.somethingSelected()) {
                 searchTerm = currentView.editor.getSelection();
                 this.inputEl.value = searchTerm;
@@ -107,11 +113,15 @@ export default class DictionarySuggester extends FuzzySuggestModal<Definition>{
     onChooseItem(item: Definition, evt: MouseEvent | KeyboardEvent) { }
 
     renderSuggestion(item: FuzzyMatch<Definition>, el: HTMLElement) {
-        el.innerHTML = '<b>' + item.item.Term + '</b><br/>' + item.item.Definition;
+        // el.innerHTML = '<b>' + item.item.Term + '</b><br/>' + item.item.Definition;
+        el.createEl('b', {text: item.item.Term});
+        el.createEl('br');
+        el.appendText(item.item.Definition);
     }
 
     onChooseSuggestion(item: FuzzyMatch<Definition>, evt: MouseEvent | KeyboardEvent): void {
-        if (this.app.workspace.activeLeaf.getViewState().state.mode == 'source') {
+        const currentView: any = this.plugin.app.workspace.getActiveViewOfType(MarkdownView);
+        if (currentView != null && currentView.getMode() == 'source') {
             const active_view = this.app.workspace.getActiveViewOfType(MarkdownView);
             active_view.editor.replaceSelection('**' + item.item.Term + '**\n' + item.item.Definition + '\n\n');
         } else
