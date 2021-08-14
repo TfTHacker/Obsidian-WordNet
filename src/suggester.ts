@@ -22,13 +22,13 @@ export default class DictionarySuggester extends FuzzySuggestModal<Definition>{
         setTimeout(async () => {
             //load the WordNet dictionary
             const pathWordNetJson = this.plugin.manifest.dir + '/dict-WordNet.json';
-            const adapter = this.plugin.app.vault.adapter
+            const adapter = this.app.vault.adapter
 
             if (await adapter.exists(pathWordNetJson)) {
                 const fileWordNet = await adapter.read(pathWordNetJson);
                 this.wordNet = await JSON.parse(fileWordNet);
             } else {
-                if(navigator.onLine==false) {
+                if(navigator.onLine===false) {
                     new Notice('You do not have an internet connection, and the WordNet dictionary cannot be downloaded. Please restore your interent connection and resteart Obsidian', 30000);
                     this.plugin.unload();
                 } else {
@@ -37,7 +37,7 @@ export default class DictionarySuggester extends FuzzySuggestModal<Definition>{
                         const response = await fetch('https://wordnet.glitch.me/dict-WordNet.json');
                         downloadMessage.hide();
                         if (!response.ok) {
-                            if(response.status == 404) {
+                            if(response.status === 404) {
                                 new Notice(`The WordNet dictionary file is not currently available for download. Please try again later or contact the developer on Twitter: @TfThacker for support.`,30000);
                             } else {
                                 console.log(`Error in WordNet dictinary: ${response.status}`);
@@ -93,7 +93,7 @@ export default class DictionarySuggester extends FuzzySuggestModal<Definition>{
         let searchTerm = '';
 
         if (this.inputEl.value.trim().length == 0) {
-            const currentView: any = this.plugin.app.workspace.getActiveViewOfType(MarkdownView);
+            const currentView: any = this.app.workspace.getActiveViewOfType(MarkdownView);
             if (currentView != null && currentView.getMode() != undefined
                 && currentView.editor.somethingSelected()) {
                 searchTerm = currentView.editor.getSelection();
@@ -103,7 +103,7 @@ export default class DictionarySuggester extends FuzzySuggestModal<Definition>{
         } else
             searchTerm = this.inputEl.value.trim()
 
-        return searchTerm == '' ? [] : this.query(searchTerm)
+        return searchTerm === '' ? [] : this.query(searchTerm)
     };
 
     getItemText(item: Definition) {
@@ -121,10 +121,9 @@ export default class DictionarySuggester extends FuzzySuggestModal<Definition>{
 
     onChooseSuggestion(item: FuzzyMatch<Definition>, evt: MouseEvent | KeyboardEvent): void {
         const currentView: any = this.plugin.app.workspace.getActiveViewOfType(MarkdownView);
-        if (currentView != null && currentView.getMode() == 'source') {
-            const active_view = this.app.workspace.getActiveViewOfType(MarkdownView);
-            active_view.editor.replaceSelection('**' + item.item.Term + '**\n' + item.item.Definition + '\n\n');
-        } else
+        if (currentView != null && currentView.getMode() === 'source') 
+            currentView.editor.replaceSelection('**' + item.item.Term + '**\n' + item.item.Definition + '\n\n');
+        else
             new Notice(item.item.Term + ' \n' + item.item.Definition, 10000);
     }
 

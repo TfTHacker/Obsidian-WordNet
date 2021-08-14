@@ -28,7 +28,7 @@ export default class WordNetPlugin extends Plugin {
 		});
 	}
 
-	async onload() {
+	async onload() { 
 		console.log('loading WordNet plugin');
 
 		await this.loadSettings();
@@ -77,7 +77,7 @@ class WordNetSettingTab extends PluginSettingTab {
 				cb.setValue(this.plugin.settings.enableRibbon);
 				cb.onChange(async (value: boolean) => {
 					this.plugin.settings.enableRibbon = value;
-					if (this.plugin.settings.enableRibbon == false)
+					if (this.plugin.settings.enableRibbon === false)
 						this.plugin.ribbonIcon.remove();
 					else
 						this.plugin.configureRibbonCommand();
