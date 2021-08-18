@@ -33,6 +33,8 @@ export default class WordNetPlugin extends Plugin {
 
 		await this.loadSettings();
 
+		this.addSettingTab(new WordNetSettingTab(this.app, this));
+
 		this.dictionarySuggestor = new DictionarySuggester(this);
 
 		if (this.settings.enableRibbon)
@@ -69,7 +71,7 @@ class WordNetSettingTab extends PluginSettingTab {
 	display(): void {
 		let { containerEl } = this;
 		containerEl.empty();
-		containerEl.createEl('h2', { text: 'WordNet Dictionary Setting' });
+		containerEl.createEl('h2', { text: 'Obsidian42 - WordNet Dictionary Setting' });
 		new Setting(containerEl)
 			.setName('Enable Ribbon Support')
 			.setDesc('Toggle on and off the WordNet dictionary button in the ribbon.')
