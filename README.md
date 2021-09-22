@@ -1,6 +1,11 @@
 # Obsidian-WordNet
 WordNet plugin for Obsidian.  WordNet is a large lexical database of English terms developed by Princeton University and its license allows use in other applications.
 
+WordNet is part of the Obsidian42 family of Obsidian plugins. Check out the others:
+- [Text Transporter](https://github.com/TfTHacker/obsidian42-text-transporter) - advanced text management for Obsidian. 
+- [Jump-to-Date](https://github.com/TfTHacker/obsidian42-jump-to-date) - Jump to a date via a convenient popup.
+
+
 # Instructions
 The WordNet dictionary can be accessed either through the command palette or the WordNet button on the ribbon. 
 
