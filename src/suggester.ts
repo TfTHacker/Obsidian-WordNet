@@ -1,7 +1,7 @@
-import { DataAdapter, FuzzyMatch, FuzzySuggestModal, MarkdownView, Notice, request, Vault } from 'obsidian';
+import { DataAdapter, FuzzyMatch, FuzzySuggestModal, MarkdownView, Notice } from 'obsidian';
 import WordNetPlugin from './main';
 
-interface Definition {
+export interface Definition {
     SearchTerm: string,
     Term: string,
     Definition: string
@@ -113,7 +113,6 @@ export default class DictionarySuggester extends FuzzySuggestModal<Definition>{
     onChooseItem(item: Definition, evt: MouseEvent | KeyboardEvent) { }
 
     renderSuggestion(item: FuzzyMatch<Definition>, el: HTMLElement) {
-        // el.innerHTML = '<b>' + item.item.Term + '</b><br/>' + item.item.Definition;
         el.createEl('b', {text: item.item.Term});
         el.createEl('br');
         el.appendText(item.item.Definition);

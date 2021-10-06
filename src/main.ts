@@ -1,4 +1,5 @@
 import { App, Modal, Notice, Plugin, PluginSettingTab, Setting, ToggleComponent, addIcon } from 'obsidian';
+import TheEditorSuggestor from './EditSuggest';
 import DictionarySuggester from './suggester'
 
 interface WordNetSettings {
@@ -45,7 +46,11 @@ export default class WordNetPlugin extends Plugin {
 			name: 'Look up a word',
 			callback: ()=> { this.dictionarySuggestor.open() }
 		});
+
+		this.registerEditorSuggest(new TheEditorSuggestor(this)); 
+		
 	}
+
 
 	onunload() {
 		console.log('unloading WordNet plugin');
