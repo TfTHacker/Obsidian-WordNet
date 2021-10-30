@@ -17,6 +17,7 @@
     "@types/node": "^16.11.6",
     "@typescript-eslint/eslint-plugin": "^5.2.0",
     "@typescript-eslint/parser": "^5.2.0",
+		"esbuild": "0.13.11",
     "eslint": "^8.1.0",
     "obsidian": "^0.12.17",
     "tslib": "^2.3.1",

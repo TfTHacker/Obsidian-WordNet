@@ -14,6 +14,14 @@ Once invoked, WordNet will allow you to input the word you want to look up. As y
 ![Feature Preview](FeaturePreview.gif)
 
 
+# Slash Command
+WordNet plugin can also be accessed via a slash command, using ;; as demonstrated in this video: [New slash command feature](https://twitter.com/tfthacker/status/1454442949685784586).
+- This feature can be toggled off in Settings
+- The trigger for this slash command can be changed from the default ;; to anything you like in Settings
+
+# Template insertions of dictionary definitions
+- the format of the insertion of a term and its definition can be customized in Settings use the template section. The template should include {term} with the brackets and {definition} with the brackets for the insertion of the term and the definition.
+
 # Custom Dictionary
 You can develop your own custom dictionary for this plugin using these [instructions](README-CustomDictionary.md).
 
