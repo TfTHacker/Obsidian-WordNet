@@ -2,7 +2,6 @@ import { Plugin } from "obsidian";
 import TheEditorSuggestor from "./EditSuggest";
 import DictionarySuggester from "./suggester";
 import { WordNetSettingTab, WordNetSettings, DEFAULT_SETTINGS } from "./settings";
-import { addIcons } from "./icons";
 
 export default class WordNetPlugin extends Plugin {
 	settings: WordNetSettings;
@@ -11,7 +10,7 @@ export default class WordNetPlugin extends Plugin {
 	editSuggester: TheEditorSuggestor;
 
 	configureRibbonCommand(): void {
-		this.ribbonIcon = this.addRibbonIcon("wordnet", "WordNet Dictionary", async () => {
+		this.ribbonIcon = this.addRibbonIcon("book-open-check", "WordNet Dictionary", async () => {
 			this.dictionarySuggestor.open();
 		});
 	}
@@ -20,7 +19,6 @@ export default class WordNetPlugin extends Plugin {
 		console.log("loading WordNet plugin");
 
 		await this.loadSettings();
-		addIcons();
 
 		this.addSettingTab(new WordNetSettingTab(this.app, this));
 

@@ -1,6 +1,6 @@
 {
   "name": "obsidian-wordnet-plugin",
-  "version": "1.0.1",
+  "version": "2.0.2",
   "description": "WordNet plugin for Obsidian.  WordNet is a large lexical database of English developed by Princeton University and its license allows use in other applications.",
   "main": "main.js",
   "scripts": {
@@ -15,14 +15,14 @@
     "url": "git://github.com/TfTHacker/Obsidian-WordNet.git"
   },
   "devDependencies": {
-    "@types/node": "^16.11.6",
+    "@types/node": "^18.15.5",
     "@typescript-eslint/eslint-plugin": "^5.2.0",
     "@typescript-eslint/parser": "^5.2.0",
-		"esbuild": "0.13.11",
+		"esbuild": "0.16.7",
     "eslint": "^8.1.0",
-    "obsidian": "^0.12.17",
+    "obsidian": "^1.1.1",
     "tslib": "^2.3.1",
-    "typescript": "^4.4.4"
+    "typescript": "^5.0.2"
   },
   "dependencies": {}
 }
