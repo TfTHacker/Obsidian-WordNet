@@ -4,8 +4,9 @@
   "description": "WordNet plugin for Obsidian.  WordNet is a large lexical database of English developed by Princeton University and its license allows use in other applications.",
   "main": "main.js",
   "scripts": {
-    "dev": "esbuild src/main.ts --bundle --external:obsidian --format=cjs --outfile=build/main.js --watch",
-    "build": "esbuild src/main.ts --bundle --external:obsidian --format=cjs --outfile=build/main.js"
+    "dev": "node esbuild.config.mjs",
+    "build": "node esbuild.config.mjs production",
+    "lint": "eslint . --ext .ts"
   },
   "author": "TfT Hacker",
   "license": "MIT",
