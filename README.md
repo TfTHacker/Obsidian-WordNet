@@ -1,7 +1,7 @@
 # Obsidian-WordNet
 WordNet plugin for Obsidian.  WordNet is a large lexical database of English terms developed by Princeton University and its license allows use in other applications.
 
-Learn more by reading the documentation: https://publish.obsidian.md/tfthacker/wordnet
+Learn more by reading the documentation: https://tfthacker.com/wordnet
 
 # Instructions
 The WordNet dictionary can be accessed either through the command palette or the WordNet button on the ribbon. 
