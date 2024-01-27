@@ -12,7 +12,7 @@ Once invoked, WordNet will allow you to input the word you want to look up. As y
 
 ![Feature Preview](FeaturePreview.gif)
 
-## Ways to eonnect with me and more information on my work
+## Ways to connect with me and more information on my work
 
 You might also be interested in a few products I have made for Obsidian:
 
