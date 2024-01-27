@@ -15,14 +15,15 @@
     "url": "git://github.com/TfTHacker/Obsidian-WordNet.git"
   },
   "devDependencies": {
-    "@types/node": "^18.15.5",
-    "@typescript-eslint/eslint-plugin": "^5.2.0",
-    "@typescript-eslint/parser": "^5.2.0",
-		"esbuild": "0.16.7",
-    "eslint": "^8.1.0",
-    "obsidian": "^1.1.1",
-    "tslib": "^2.3.1",
-    "typescript": "^5.0.2"
+    "@types/node": "^20.11.8",
+    "@typescript-eslint/eslint-plugin": "^6.19.1",
+    "@typescript-eslint/parser": "^6.19.1",
+    "esbuild": "0.19.12",
+    "eslint": "^8.56.0",
+    "obsidian": "^1.4.11",
+    "tslib": "^2.6.2",
+    "typescript": "^5.3.3",
+    "builtin-modules": "3.3.0"
   },
   "dependencies": {}
 }
