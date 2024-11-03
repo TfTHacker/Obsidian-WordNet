@@ -1,4 +1,4 @@
-# 2.0.4
+# 2.0.5
 
 ### Updates
 - Updating plugin to newest Obsidian recommendations https://docs.obsidian.md/oo24/plugin.
