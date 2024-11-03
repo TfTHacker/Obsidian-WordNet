@@ -1,7 +1,11 @@
 import { Plugin } from "obsidian";
 import TheEditorSuggestor from "./EditSuggest";
+import {
+	DEFAULT_SETTINGS,
+	WordNetSettingTab,
+	type WordNetSettings,
+} from "./settings";
 import DictionarySuggester from "./suggester";
-import { WordNetSettingTab, WordNetSettings, DEFAULT_SETTINGS } from "./settings";
 
 export default class WordNetPlugin extends Plugin {
 	settings: WordNetSettings;
@@ -10,12 +14,16 @@ export default class WordNetPlugin extends Plugin {
 	editSuggester: TheEditorSuggestor;
 
 	configureRibbonCommand(): void {
-		this.ribbonIcon = this.addRibbonIcon("book-open-check", "WordNet Dictionary", async () => {
-			this.dictionarySuggestor.open();
-		});
+		this.ribbonIcon = this.addRibbonIcon(
+			"book-open-check",
+			"WordNet Dictionary",
+			async () => {
+				this.dictionarySuggestor.open();
+			},
+		);
 	}
 
-	async onload(): Promise<void> { 
+	async onload(): Promise<void> {
 		console.log("loading WordNet plugin");
 
 		await this.loadSettings();
@@ -24,17 +32,18 @@ export default class WordNetPlugin extends Plugin {
 
 		this.dictionarySuggestor = new DictionarySuggester(this);
 
-		if (this.settings.enableRibbon)
-			this.configureRibbonCommand();
+		if (this.settings.enableRibbon) this.configureRibbonCommand();
 
 		this.addCommand({
 			id: "open-wordnet-suggestor",
 			name: "Look up a word",
-			callback: ()=> { this.dictionarySuggestor.open() }
+			callback: () => {
+				this.dictionarySuggestor.open();
+			},
 		});
 
 		this.editSuggester = new TheEditorSuggestor(this);
-		this.registerEditorSuggest(this.editSuggester); 
+		this.registerEditorSuggest(this.editSuggester);
 	}
 
 	onunload(): void {
@@ -42,7 +51,9 @@ export default class WordNetPlugin extends Plugin {
 	}
 
 	renderDefinitionFromTemplate(term: string, definition: string): string {
-		return this.settings.insertTemplate.replace("{term}",term).replace("{definition}",definition);
+		return this.settings.insertTemplate
+			.replace("{term}", term)
+			.replace("{definition}", definition);
 	}
 
 	async loadSettings(): Promise<void> {

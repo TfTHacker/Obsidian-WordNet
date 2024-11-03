@@ -1,29 +1,29 @@
 {
-  "name": "obsidian-wordnet-plugin",
-  "version": "2.0.2",
-  "description": "WordNet plugin for Obsidian.  WordNet is a large lexical database of English developed by Princeton University and its license allows use in other applications.",
-  "main": "main.js",
-  "scripts": {
-    "dev": "node esbuild.config.mjs",
-    "build": "node esbuild.config.mjs production",
-    "lint": "eslint . --ext .ts"
-  },
-  "author": "TfT Hacker",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/TfTHacker/Obsidian-WordNet.git"
-  },
-  "devDependencies": {
-    "@types/node": "^20.11.8",
-    "@typescript-eslint/eslint-plugin": "^6.19.1",
-    "@typescript-eslint/parser": "^6.19.1",
-    "esbuild": "0.19.12",
-    "eslint": "^8.56.0",
-    "obsidian": "^1.4.11",
-    "tslib": "^2.6.2",
-    "typescript": "^5.3.3",
-    "builtin-modules": "3.3.0"
-  },
-  "dependencies": {}
+	"name": "obsidian-wordnet-plugin",
+	"ime": "obsidian-wordnet-plugin",
+	"version": "2.0.4",
+	"description": "WordNet plugin for Obsidian.  WordNet is a large lexical database of English developed by Princeton University and its license allows use in other applications.",
+	"main": "main.js",
+	"scripts": {
+		"dev": "node --no-warnings esbuild.config.mjs",
+		"build": "node --no-warnings esbuild.config.mjs production",
+		"lint": "biome check ./src",
+		"version": "node version-bump.mjs",
+		"githubaction": "node version-github-action.mjs"
+	},
+	"author": "TfT Hacker",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/TfTHacker/Obsidian-WordNet.git"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.4",
+		"@types/node": "^22.8.7",
+		"builtin-modules": "4.0.0",
+		"esbuild": "0.24.0",
+		"obsidian": "1.7.2",
+		"tslib": "^2.6.2",
+		"typescript": "^5.3.3"
+	}
 }
