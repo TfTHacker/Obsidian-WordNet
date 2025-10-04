@@ -1,3 +1,7 @@
+# 2.0.6
+### Updates
+- Updated dependencies to latest versions.
+
 # 2.0.5
 
 ### Updates
